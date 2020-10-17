@@ -14,6 +14,6 @@ namespace ApiKeyStorageService.Data
         {
         }
 
-        public DbSet<ApiKeyStorageService.Model.TornApiKey> TornApiKey { get; set; }
+        public DbSet<TornApiKey> TornApiKey { get; set; }
     }
 }

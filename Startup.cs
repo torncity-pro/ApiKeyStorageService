@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using ApiKeyStorageService.Data;
 
 namespace ApiKeyStorageService
 {
@@ -26,6 +28,9 @@ namespace ApiKeyStorageService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddDbContext<TornApiKeyContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("TornApiKeyContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

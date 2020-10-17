@@ -4,14 +4,12 @@ namespace ApiKeyStorageService.Model
 {
     public class TornApiKey
     {
-        [Key]
         public int PlayerId { get; set; }
         
         public int FactionId { get; set; }
         
         public int CompanyId { get; set; }
         
-        [MaxLength(32)]
         public string ApiKey { get; set; }
         
         public bool Enabled { get; set; }

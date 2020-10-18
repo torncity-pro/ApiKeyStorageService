@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ApiKeyStorageService.Model
+﻿namespace ApiKeyStorageService.Model
 {
     public class TornApiKey
     {

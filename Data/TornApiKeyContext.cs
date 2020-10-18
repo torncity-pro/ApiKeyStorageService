@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ApiKeyStorageService.Model;
 using Microsoft.EntityFrameworkCore;
-using ApiKeyStorageService.Model;
 
 namespace ApiKeyStorageService.Data
 {
@@ -23,11 +19,6 @@ namespace ApiKeyStorageService.Data
                 .IsRequired(true);
             modelBuilder.Entity<TornApiKey>().HasIndex(a => a.ApiKey)
                 .IsUnique(true);
-
-            /*
-            modelBuilder.Entity<TornApiKey>().Property(a => a.Key)
-                .HasConversion(dbin => SecretsUtil.EncryptString(dbin), dbout => SecretsUtil.DecryptString(dbout)); // Used for encrpyting and decrypting a string
-            */
         }
 
         public DbSet<TornApiKey> TornApiKey { get; set; }

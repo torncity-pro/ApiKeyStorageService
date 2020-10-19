@@ -1,23 +1,20 @@
 ﻿@model IEnumerable<ApiKeyStorageService.Model.TornApiKey>
 
 @{
-    Layout = null;
+    ViewData["Title"] = "Index";
 }
 
-<!DOCTYPE html>
+<h1>Index</h1>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
-</head>
-<body>
 <p>
     <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PlayerId)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.FactionId)
             </th>
@@ -48,6 +45,9 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PlayerId)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FactionId)
             </td>
@@ -81,5 +81,3 @@
 }
     </tbody>
 </table>
-</body>
-</html>

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ApiKeyStorageService.Data;
 using ApiKeyStorageService.Model;
+using Microsoft.Extensions.Logging;
 
 namespace ApiKeyStorageService.Controllers
 {
@@ -15,16 +16,19 @@ namespace ApiKeyStorageService.Controllers
     public class TornApiKeysController : ControllerBase
     {
         private readonly TornApiKeyContext _context;
+        private readonly ILogger<TornApiKeysController> _logger;
 
-        public TornApiKeysController(TornApiKeyContext context)
+        public TornApiKeysController(TornApiKeyContext context, ILogger<TornApiKeysController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/TornApiKeys
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TornApiKey>>> GetTornApiKey()
         {
+            _logger.LogInformation("Getting all TornApiKeys");
             return await _context.TornApiKey.ToListAsync();
         }
 
@@ -59,8 +63,9 @@ namespace ApiKeyStorageService.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException ex)
             {
+                _logger.LogError(ex, "Error attempting to PUT {0}", id);
                 if (!TornApiKeyExists(id))
                 {
                     return NotFound();

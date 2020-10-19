@@ -21,6 +21,7 @@ namespace ApiKeyStorageService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddControllersWithViews();
 
             services.AddDbContext<TornApiKeyContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("TornApiKeyDb")));
@@ -36,6 +37,7 @@ namespace ApiKeyStorageService
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
             app.UseRouting();
 
@@ -44,6 +46,9 @@ namespace ApiKeyStorageService
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    "default",
+                    "{controller=ApiKey}/{action=Index}/{id?}");
             });
         }
     }

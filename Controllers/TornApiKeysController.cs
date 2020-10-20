@@ -54,7 +54,7 @@ namespace ApiKeyStorageService.Controllers
         }
 
         // GET: api/TornApiKeys/TornApiKeys
-        [HttpGet("TornTrackingApiKeys")]
+        [HttpGet("TornApiKeys")]
         public async Task<ActionResult<IEnumerable<TornApiKey>>> GetTornApiKeys()
         {
             return await _context.TornApiKey.Where(i => i.Enabled && i.TrackTorn).ToListAsync().ConfigureAwait(false);

@@ -29,14 +29,42 @@ namespace ApiKeyStorageService.Controllers
         public async Task<ActionResult<IEnumerable<TornApiKey>>> GetTornApiKey()
         {
             _logger.LogInformation("Getting all TornApiKeys");
-            return await _context.TornApiKey.ToListAsync();
+            return await _context.TornApiKey.Where(i => i.Enabled).ToListAsync().ConfigureAwait(false);
+        }
+
+        // GET: api/TornApiKeys/FactionApiKeys
+        [HttpGet("FactionApiKeys")]
+        public async Task<ActionResult<IEnumerable<TornApiKey>>> GetFactionApiKeys()
+        {
+            return await _context.TornApiKey.Where(i => i.Enabled && i.TrackFaction).ToListAsync().ConfigureAwait(false);
+        }
+
+        // GET: api/TornApiKeys/PlayerApiKeys
+        [HttpGet("PlayerApiKeys")]
+        public async Task<ActionResult<IEnumerable<TornApiKey>>> GetPlayerApiKeys()
+        {
+            return await _context.TornApiKey.Where(i => i.Enabled && i.TrackPlayer).ToListAsync().ConfigureAwait(false);
+        }
+
+        // GET: api/TornApiKeys/CompanyApiKeys
+        [HttpGet("CompanyApiKeys")]
+        public async Task<ActionResult<IEnumerable<TornApiKey>>> GetCompanyApiKeys()
+        {
+            return await _context.TornApiKey.Where(i => i.Enabled && i.TrackCompany).ToListAsync().ConfigureAwait(false);
+        }
+
+        // GET: api/TornApiKeys/TornApiKeys
+        [HttpGet("TornTrackingApiKeys")]
+        public async Task<ActionResult<IEnumerable<TornApiKey>>> GetTornApiKeys()
+        {
+            return await _context.TornApiKey.Where(i => i.Enabled && i.TrackTorn).ToListAsync().ConfigureAwait(false);
         }
 
         // GET: api/TornApiKeys/5
         [HttpGet("{id}")]
         public async Task<ActionResult<TornApiKey>> GetTornApiKey(int id)
         {
-            var tornApiKey = await _context.TornApiKey.FindAsync(id);
+            var tornApiKey = await _context.TornApiKey.FindAsync(id).ConfigureAwait(false);
 
             if (tornApiKey == null)
             {
@@ -61,7 +89,7 @@ namespace ApiKeyStorageService.Controllers
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (DbUpdateConcurrencyException ex)
             {
@@ -86,7 +114,7 @@ namespace ApiKeyStorageService.Controllers
         public async Task<ActionResult<TornApiKey>> PostTornApiKey(TornApiKey tornApiKey)
         {
             _context.TornApiKey.Add(tornApiKey);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return CreatedAtAction("GetTornApiKey", new { id = tornApiKey.PlayerId }, tornApiKey);
         }
@@ -95,14 +123,14 @@ namespace ApiKeyStorageService.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<TornApiKey>> DeleteTornApiKey(int id)
         {
-            var tornApiKey = await _context.TornApiKey.FindAsync(id);
+            var tornApiKey = await _context.TornApiKey.FindAsync(id).ConfigureAwait(false);
             if (tornApiKey == null)
             {
                 return NotFound();
             }
 
             _context.TornApiKey.Remove(tornApiKey);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
 
             return tornApiKey;
         }

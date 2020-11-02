@@ -23,11 +23,7 @@
                 <input asp-for="CompanyId" class="form-control" />
                 <span asp-validation-for="CompanyId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ApiKey" class="control-label"></label>
-                <input asp-for="ApiKey" class="form-control" value="" />
-                <span asp-validation-for="ApiKey" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="ApiKey" />
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Enabled" /> @Html.DisplayNameFor(model => model.Enabled)

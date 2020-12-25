@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ApiKeyStorageService.Data;
 using ApiKeyStorageService.Model;
+using TornApiHttpClient;
 
 namespace ApiKeyStorageService.Controllers
 {
     public class ApiKeyController : Controller
     {
         private readonly TornApiKeyContext _context;
+        private readonly ITornApiHttpClient _client;
 
-        public ApiKeyController(TornApiKeyContext context)
+        public ApiKeyController(TornApiKeyContext context, ITornApiHttpClient client)
         {
             _context = context;
+            _client = client;
         }
 
         // GET: ApiKey
@@ -54,10 +57,12 @@ namespace ApiKeyStorageService.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PlayerId,FactionId,CompanyId,ApiKey,Enabled,TrackPlayer,TrackFaction,TrackCompany,TrackTorn")] TornApiKey tornApiKey)
+        public async Task<IActionResult> Create([Bind("ApiKey,Enabled,TrackPlayer,TrackFaction,TrackCompany,TrackTorn")] TornApiKey tornApiKey)
         {
             if (ModelState.IsValid)
             {
+                // Verify API Key
+                tornApiKey = await VerifyApiKey(tornApiKey).ConfigureAwait(false);
                 _context.Add(tornApiKey);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -86,7 +91,7 @@ namespace ApiKeyStorageService.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PlayerId,FactionId,CompanyId,ApiKey,Enabled,TrackPlayer,TrackFaction,TrackCompany,TrackTorn")] TornApiKey tornApiKey)
+        public async Task<IActionResult> Edit(int id, [Bind("ApiKey,Enabled,TrackPlayer,TrackFaction,TrackCompany,TrackTorn")] TornApiKey tornApiKey)
         {
             if (id != tornApiKey.PlayerId)
             {
@@ -95,6 +100,7 @@ namespace ApiKeyStorageService.Controllers
 
             if (ModelState.IsValid)
             {
+                tornApiKey = await VerifyApiKey(tornApiKey).ConfigureAwait(false);
                 try
                 {
                     _context.Update(tornApiKey);
@@ -148,6 +154,15 @@ namespace ApiKeyStorageService.Controllers
         private bool TornApiKeyExists(int id)
         {
             return _context.TornApiKey.Any(e => e.PlayerId == id);
+        }
+
+        private async Task<TornApiKey> VerifyApiKey(TornApiKey tornApiKey)
+        {
+            var user = await _client.GetUserDataAsync(tornApiKey.ApiKey).ConfigureAwait(false);
+            tornApiKey.PlayerId = user.PlayerId;
+            tornApiKey.FactionId = user.Faction.FactionId;
+            tornApiKey.CompanyId = user.Job.CompanyId;
+            return tornApiKey;
         }
     }
 }

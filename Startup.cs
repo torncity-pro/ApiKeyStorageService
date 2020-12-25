@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TornApiHttpClient;
 
 namespace ApiKeyStorageService
 {
@@ -26,6 +27,7 @@ namespace ApiKeyStorageService
             services.AddDbContext<TornApiKeyContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("TornApiKeyDb")));
             services.AddApplicationInsightsTelemetry();
+            services.AddHttpClient<ITornApiHttpClient, TornApiHttpClient.TornApiHttpClient>("default");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

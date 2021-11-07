@@ -158,7 +158,7 @@ namespace ApiKeyStorageService.Controllers
 
         private async Task<TornApiKey> VerifyApiKey(TornApiKey tornApiKey)
         {
-            var user = await _client.GetUserDataAsync(tornApiKey.ApiKey).ConfigureAwait(false);
+            var user = await _client.GetUserDataAsync(tornApiKey.ApiKey, Comment: "TC Pro").ConfigureAwait(false);
             tornApiKey.PlayerId = user.PlayerId;
             tornApiKey.FactionId = user.Faction.FactionId;
             tornApiKey.CompanyId = user.Job.CompanyId;
